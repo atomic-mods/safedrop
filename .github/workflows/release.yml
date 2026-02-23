@@ -43,6 +43,10 @@ jobs:
       - name: Build Mod Jars
         run: ./gradlew build
 
+      - name: Remove Javadoc, Sources, and Dev Jars
+        run: |
+          find fabric/build/libs neoforge/build/libs -name '*-javadoc.jar' -o -name '*-sources.jar' -o -name '*-dev.jar' | xargs rm -f
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -51,12 +55,6 @@ jobs:
           body: ${{ inputs.release_notes }}
           files: |
             fabric/build/libs/*.jar
-            !fabric/build/libs/*-javadoc.jar
-            !fabric/build/libs/*-sources.jar
-            !fabric/build/libs/*-dev.jar
             neoforge/build/libs/*.jar
-            !neoforge/build/libs/*-javadoc.jar
-            !neoforge/build/libs/*-sources.jar
-            !neoforge/build/libs/*-dev.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
